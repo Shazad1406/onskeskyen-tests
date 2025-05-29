@@ -1,27 +1,41 @@
+# .github/workflows/playwright.yml
+
 name: Run Playwright tests
 
-on: [push]
+# Trigger this workflow on push or pull request to the main branch
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
 
 jobs:
   test:
+    # Use the latest Ubuntu runner
     runs-on: ubuntu-latest
 
     steps:
+      # Checkout the repository code
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      # Set up Node.js environment (version 18)
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '18'
 
+      # Install all npm dependencies
       - name: Install dependencies
-        run: npm ci
+        run: npm install
 
+      # Install Playwright browsers with system dependencies
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
 
-      - name: Run Playwright tests in headless mode
+      # Run the Playwright tests using only 1 worker to avoid concurrency issues
+      - name: Run Playwright tests
         run: npx playwright test --workers=1
         env:
-          CI: true
+          CI: true          # Let Playwright know we're running in a CI environment
+          HEADLESS: true    # Ensure tests run in headless mode

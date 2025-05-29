@@ -1,10 +1,10 @@
-# Node modules
+# Ignore node dependencies
 node_modules/
 
-# Test output
+# Ignore Playwright test output and temporary test data
 test-results/
 temp/
 
-# VSCode og systemfiler
+# Ignore local IDE and OS-specific files
 .vscode/
 .DS_Store
