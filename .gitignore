@@ -1,0 +1,10 @@
+# Node modules
+node_modules/
+
+# Test output
+test-results/
+temp/
+
+# VSCode og systemfiler
+.vscode/
+.DS_Store
