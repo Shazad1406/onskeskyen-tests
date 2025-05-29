@@ -1,5 +1,3 @@
-// tests/03_wishlist.spec.ts
-
 import { test, expect } from '@playwright/test';
 import { signupWithEmail, loginWithEmail, createWishlist } from './helpers/auth';
 

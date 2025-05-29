@@ -5,20 +5,29 @@ import { type Page, expect } from '@playwright/test';
  */
 async function dismissCookieBanner(page: Page) {
   try {
+    // Try clicking the accept button if visible
     const acceptButton = page.getByRole('button', { name: /accepter alle/i });
-
     if (await acceptButton.isVisible({ timeout: 3000 })) {
       await acceptButton.click();
-      await page.waitForTimeout(500); // Give the DOM time to update
+      await page.waitForTimeout(500);
     }
-
-    await page.evaluate(() => {
-      document.getElementById('cookie-information-template-wrapper')?.remove();
-      document.getElementById('coiOverlay')?.remove();
-    });
   } catch {
-    // If the banner is not present, do nothing
+    // If the button isn’t there, that’s okay
   }
+
+  // Force-remove any remaining overlays
+  await page.evaluate(() => {
+    const wrapper = document.getElementById('cookie-information-template-wrapper');
+    if (wrapper) wrapper.remove();
+
+    const overlay = document.getElementById('coiOverlay');
+    if (overlay) {
+      overlay.remove();
+    }
+  });
+
+  // Wait a moment to ensure DOM updates
+  await page.waitForTimeout(500);
 }
 
 /**
@@ -67,6 +76,7 @@ export async function signupWithEmail(page: Page): Promise<{ email: string; pass
 export async function loginWithEmail(page: Page, email: string, password: string) {
   await page.goto('https://onskeskyen.dk');
   await dismissCookieBanner(page);
+  await page.waitForTimeout(1000);
 
   await page.getByRole('button', { name: 'Log ind' }).click();
   await page.getByRole('button', { name: /fortsæt med e-mail/i }).click();

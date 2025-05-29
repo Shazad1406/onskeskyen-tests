@@ -1,5 +1,3 @@
-// tests/02_login.spec.ts
-
 import { test } from '@playwright/test';
 import { signupWithEmail, loginWithEmail } from './helpers/auth';
 

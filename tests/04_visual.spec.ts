@@ -1,16 +1,20 @@
-// tests/04_visual.spec.ts
-
 import { test, expect } from '@playwright/test';
-import { signupWithEmail, loginWithEmail } from './helpers/auth';
 
-// This test captures a visual snapshot of the profile page for comparison
-test('Visual test of profile page', async ({ page }) => {
-  const { email, password } = await signupWithEmail(page); // Sign up a new user
-  await loginWithEmail(page, email, password); // Log in with the same user
+test('Visual test of login page', async ({ page }) => {
+  await page.goto('https://onskeskyen.dk');
+  
+// Accept cookie banner if it appears
+  const cookieButton = page.getByRole('button', { name: /accepter alle/i });
+  if (await cookieButton.isVisible()) {
+    await cookieButton.click();
+  }
 
-  // Navigate to the profile page
-  await page.goto('https://onskeskyen.dk/min-profil');
+ 
+  await page.getByRole('button', { name: 'Log ind' }).click();
 
-  // Take a visual snapshot of the page and compare it to the stored baseline
-  await expect(page).toHaveScreenshot('profile-page.png');
+  // Wait for login flow
+  await page.getByRole('button', { name: /fortsæt med e-mail/i }).waitFor();
+
+  // Screenshot of the login page
+  await expect(page).toHaveScreenshot('login-page.png');
 });

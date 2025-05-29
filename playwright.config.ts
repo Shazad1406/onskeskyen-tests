@@ -1,31 +1,24 @@
-// playwright.config.ts
-
 import { defineConfig, devices } from '@playwright/test';
 
 const config = defineConfig({
-  // Directory containing the tests
   testDir: './tests',
-
-  // Global timeout for each test (60 seconds)
   timeout: 60000,
-
   use: {
-    // Run tests in headless mode unless explicitly set otherwise
     headless: process.env.HEADLESS !== 'false',
 
-    // Slow down operations to make test behavior easier to observe
+    // Gør visuelle tests mere stabile:
+    viewport: { width: 1280, height: 720 },
     launchOptions: {
-      slowMo: 500,
+      slowMo: 300, // Giver browseren lidt tid til at indlæse elementer ordentligt
     },
-
-    // Automatically take a screenshot if a test fails
+    actionTimeout: 10000,   
     screenshot: 'only-on-failure',
-
-    // Keep video recordings only when a test fails
     video: 'retain-on-failure',
-  },
 
-  // Define projects to run tests across major browsers
+    // Disabler CSS animationer (kan også gøres i selve testen)
+    // NOTE: Kun hvis du har global setup
+    // Set disableAnimations: true hvis du vil bruge plugins eller tilføje global style
+  },
   projects: [
     {
       name: 'Chromium',
